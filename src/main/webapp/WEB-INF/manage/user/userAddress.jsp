@@ -1,0 +1,106 @@
+<%@ page import="java.util.List" %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="path" value="${pageContext.request.contextPath}"></c:set>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <style>
+        img{
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<jsp:include page="/manageConfig/inc/top.jsp"></jsp:include>
+<div class="container clearfix">
+    <jsp:include page="/manageConfig/inc/left.jsp"></jsp:include>
+    <!--/sidebar-->
+    <div class="main-wrap">
+        <div class="crumb-wrap">
+            <div class="crumb-list"><i class="icon-font"></i><a href="${path}/manage/manager/index">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">用户地址</span></div>
+        </div>
+<%--        <div class="search-wrap">--%>
+<%--            <div class="search-content">--%>
+<%--                <form action="${path}/manage/user/search" method="get">--%>
+<%--                    <table class="search-tab">--%>
+<%--                        <tr>--%>
+<%--                            <th width="70">关键字:</th>--%>
+<%--                            <td><input class="common-text" placeholder="关键字" name="keywords" value="${param.keywords}" id="keywords" type="text"></td>--%>
+<%--                            <td><input class="btn btn-primary btn2" name="sub" value="查询" type="submit"></td>--%>
+<%--                        </tr>--%>
+<%--                    </table>--%>
+<%--                </form>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+        <div class="result-wrap">
+            <form name="myform" id="myform" method="post">
+                <div class="result-title">
+                    <div class="result-list">
+                        <a id="batchDel" href="javascript:void(0)" data-type="address" data-path="${path}"><i class="icon-font" ></i>批量删除</a>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <table class="result-tab" width="100%">
+                        <tr>
+                            <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                            <th>用户名</th>
+                            <th>省份</th>
+                            <th>市/县</th>
+                            <th>区</th>
+                            <th>详细地址</th>
+                            <th>是否为默认</th>
+                            <th>操作</th>
+                        </tr>
+
+                        <c:forEach items="${requestScope.addressList}" var="address">
+                            <tr id ="tr_${address.id}">
+                                <td class="tc"><input name="id[]" value="59"  type="checkbox" class="check" data-id="${address.id}"></td>
+                                <td>${address.user.username}</td>
+                                <td>${address.province.name}</td>
+                                <td>${address.city.name}</td>
+                                <td>${address.district.name}</td>
+                                <td>${address.address}</td>
+                                <c:if test="${address.isDefault eq true}" var="flag">
+                                    <td>是</td>
+                                </c:if>
+                                <c:if test="${!flag}" >
+                                    <td>否</td>
+                                </c:if>
+                                <td>
+                                    <a class="link-del" href="" data-id="${address.id}" data-type="user" data-path="${path}">删除</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                    <div class="list-page">
+                        <c:set var="page" value="${requestScope.pageUtils}"></c:set>
+                        ${page.pageNum}/${page.pageCount}页 ${page.dataCount}条
+                        <c:if test="${page.dataCount != 0}">
+                            <c:if test="${empty param.keywords}" var="flag">
+                                <c:forEach begin="0" end="${page.pageCount-1}" varStatus="stat">
+                                    <a href="${path}/manage/user/userAddress?pageNum=${stat.count}&userId = ${address.user.id}" class="${stat.count eq page.pageNum?'current':''}">${stat.count}</a>
+                                </c:forEach>
+                            </c:if>
+<%--                            <c:if test="${not flag}">--%>
+<%--                                <c:forEach begin="0" end="${page.pageCount-1}" varStatus="stat">--%>
+<%--                                    <a href="${path}/manage/user/search?pageNum=${stat.count}&keywords=${param.keywords}" class="${stat.count eq page.pageNum?'current':''}">${stat.count}</a>--%>
+<%--                                </c:forEach>--%>
+<%--                            </c:if>--%>
+                        </c:if>
+                        <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--/main-->
+</div>
+</body>
+</html>
+
+
